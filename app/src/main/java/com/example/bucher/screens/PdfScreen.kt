@@ -1,11 +1,12 @@
-package com.example.bucher
+package com.example.bucher.screens
 
 import android.content.Intent
-import android.net.Uri
+
 import androidx.activity.compose.rememberLauncherForActivityResult
 
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.clickable
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,27 +25,26 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarColors
+
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 
 import androidx.compose.ui.unit.dp
+import com.example.bucher.model.PdfBook
+import com.example.bucher.viewModel.PdfViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PdfViews(viewModel: PdfViewModel) {
     val context = LocalContext.current
-    var pdfUri by remember { mutableStateOf<Uri?>(null) }
 
-    // File picker launcher
+
+
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument()
     ) { uri ->
@@ -79,7 +79,7 @@ fun PdfViews(viewModel: PdfViewModel) {
                 )
             }
         }) { innerPadding ->
-        // Your main content goes here
+
         Column(modifier = Modifier.padding(innerPadding)) {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
@@ -88,7 +88,7 @@ fun PdfViews(viewModel: PdfViewModel) {
             ) {
                 items(viewModel.books.size) { index ->
                     val book = viewModel.books[index]
-                    PdfThumbnailItem(book)
+                    PdfThumbnailItem(book, onClick = {viewModel.openPdf(book)})
                 }
 
             }
@@ -97,11 +97,11 @@ fun PdfViews(viewModel: PdfViewModel) {
 }
 
 @Composable
-fun PdfThumbnailItem(book: PdfBook) {
+fun PdfThumbnailItem(book: PdfBook,onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .padding(8.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth().clickable(onClick = onClick),
         elevation = CardDefaults.cardElevation(6.dp)
     ) {
         PdfThumbnails(book.uri)

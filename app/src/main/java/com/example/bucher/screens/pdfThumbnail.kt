@@ -1,4 +1,4 @@
-package com.example.bucher
+package com.example.bucher.screens
 
 import android.graphics.Bitmap
 import android.graphics.pdf.PdfRenderer

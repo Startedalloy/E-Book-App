@@ -1,4 +1,4 @@
-package com.example.bucher
+package com.example.bucher.model
 
 import android.net.Uri
 
